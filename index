@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HYNAWEB - Premium Web Software Solutions. Creators of KODA AI Coding Mentor, DOJO FEED, KODA Code Jam, and SCRIBE. Building the future of developer tools.">
+    <meta name="keywords" content="HYNAWEB, KODA, AI coding mentor, DOJO FEED, developer social network, SCRIBE, markdown tool, web software, coding tools, Akhouri Systems">
+    <meta name="author" content="Akhouri Systems for HYNAWEB">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="HYNAWEB | Premium Developer Tools & Software">
+    <meta property="og:description" content="AI-powered coding mentors, developer social networks, and next-gen development tools.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hynaweb.com">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HYNAWEB | Next-Gen Developer Tools">
+    <meta name="twitter:description" content="Revolutionary software for the next generation of developers.">
+    
+    <title>HYNAWEB | Premium Developer Tools & Software Solutions</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            black: '#050505',
+                            dark: '#0a0a0a',
+                            gray: '#1a1a1a',
+                            accent: '#00f0ff',
+                            pink: '#ff00ff',
+                            purple: '#b829dd',
+                            orange: '#ff9500',
+                        }
+                    },
+                    animation: {
+                        'glitch': 'glitch 1s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        glitch: {
+                            '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                            '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                            '62%': { transform: 'translate(0,0) skew(5deg)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background-color: #050505; color: #ffffff; overflow-x: hidden; cursor: none; }
+        
+        /* Custom Cursor */
+        .cursor { width: 20px; height: 20px; border: 2px solid #00f0ff; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; mix-blend-mode: difference; }
+        .cursor-follower { width: 40px; height: 40px; background: rgba(0, 240, 255, 0.1); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: transform 0.3s ease-out; }
+        
+        /* Loading Screen */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .hyna-character { width: 200px; height: 200px; position: relative; animation: float 3s ease-in-out infinite; }
+        .hyna-head { width: 120px; height: 140px; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 3px solid #00f0ff; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 30px rgba(0, 240, 255, 0.1); }
+        .hyna-eyes { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 25px; }
+        .hyna-eye { width: 25px; height: 12px; background: #ff0000; border-radius: 50%; box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000; animation: eyeGlow 2s ease-in-out infinite; }
+        @keyframes eyeGlow { 0%, 100% { opacity: 1; box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000; } 50% { opacity: 0.7; box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; } }
+        .loading-bar { width: 200px; height: 3px; background: #1a1a1a; margin-top: 40px; position: relative; overflow: hidden; }
+        .loading-progress { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, #00f0ff, #ff00ff); width: 0%; animation: loadProgress 1.2s ease-out forwards; }
+        @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
+        
+        /* Grid Background */
+        .cyber-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; }
+        
+        /* Glitch Effect */
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .glitch-text::before { animation: glitch-1 2s infinite; color: #00f0ff; z-index: -1; }
+        .glitch-text::after { animation: glitch-2 2s infinite; color: #ff00ff; z-index: -2; }
+        @keyframes glitch-1 { 0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); } 20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); } 40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, -2px); } 60% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); } 80% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); } }
+        @keyframes glitch-2 { 0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); } 20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); } 40% { clip-path: inset(30% 0 40% 0); transform: translate(-2px, 2px); } 60% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); } 80% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, -2px); } }
+        
+        /* Neon Glow */
+        .neon-text { text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3); }
+        
+        /* Card Hover Effects */
+        .cyber-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .cyber-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.15); }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00d0e0; }
+        
+        /* Product Section Transitions */
+        .product-section { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-section.active { opacity: 1; transform: translateY(0); }
+        
+        /* Button Styles */
+        .cyber-btn { position: relative; overflow: hidden; transition: all 0.3s; }
+        .cyber-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
+        .cyber-btn:hover::before { left: 100%; }
+        .cyber-btn:hover { box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); transform: translateY(-2px); }
+        
+        /* Admin Panel Styles */
+        .admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.98); z-index: 9999; overflow-y: auto; backdrop-filter: blur(10px); }
+        .admin-panel.active { display: block; }
+        
+        /* Scanline Effect */
+        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1)); background-size: 100% 4px; pointer-events: none; z-index: 9998; opacity: 0.3; }
+        
+        /* Magnetic Effect */
+        .magnetic { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Particle Canvas */
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        
+        /* Logo Banner Styles */
+        .logo-banner {
+            background: linear-gradient(135deg, rgba(26,26,26,0.9) 0%, rgba(10,10,10,0.9) 100%);
+            border: 1px solid rgba(255, 149, 0, 0.3);
+            box-shadow: 0 0 40px rgba(255, 149, 0, 0.15), inset 0 0 40px rgba(255, 149, 0, 0.05);
+        }
+        .logo-banner:hover {
+            box-shadow: 0 0 60px rgba(255, 149, 0, 0.25), inset 0 0 40px rgba(255, 149, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor hidden md:block"></div>
+    <div class="cursor-follower hidden md:block"></div>
+    
+    <!-- Scanlines -->
+    <div class="scanlines"></div>
+    
+    <!-- Grid Background -->
+    <div class="cyber-grid"></div>
+    
+    <!-- Particle Canvas -->
+    <canvas id="particles"></canvas>
+    
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="hyna-character">
+            <div class="hyna-head">
+                <div class="hyna-eyes">
+                    <div class="hyna-eye"></div>
+                    <div class="hyna-eye"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+        <p class="mt-4 font-mono text-cyber-accent text-sm tracking-widest">INITIALIZING...</p>
+    </div>
+    
+    <!-- Logo Banner Section -->
+    <section class="relative py-20 px-6 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-cyber-orange/5 via-transparent to-cyber-accent/5"></div>
+        <div class="max-w-5xl mx-auto relative z-10">
+            <div class="logo-banner rounded-2xl p-12 flex flex-col items-center justify-center">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Cg%3E%3C!-- Logo Icon --%3E%3Cpath d='M 100 220 L 180 80 L 220 80 L 160 160 L 220 160 L 220 200 L 140 200 L 100 220 Z' fill='%231a1a1a'/%3E%3Cpath d='M 200 220 L 200 80 L 240 80 L 280 140 L 240 200 L 200 220 Z' fill='%23ff9500'/%3E%3Cpath d='M 180 60 L 200 25 L 220 60 Z' fill='%23ff9500'/%3E%3C!-- HYNAWEB Text --%3E%3Ctext x='280' y='170' font-family='Arial Black, sans-serif' font-size='72' font-weight='900' fill='%231a1a1a'%3EHYNAWEB%3C/text%3E%3C/g%3E%3C/svg%3E" alt="HYNAWEB Logo" class="w-full max-w-2xl h-auto mb-6">
+                <p class="text-gray-400 text-lg font-mono tracking-wider">PREMIUM DEVELOPER TOOLS &amp; SOFTWARE SOLUTIONS</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-cyber-black/80 backdrop-blur-md border-b border-cyber-gray/50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 magnetic">
+                <div class="w-10 h-10 bg-gradient-to-br from-cyber-orange to-cyber-accent rounded-lg flex items-center justify-center">
+                    <span class="font-bold text-black text-lg">H</span>
+                </div>
+                <span class="font-bold text-xl tracking-tight">HYNAWEB</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#home" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">Home</a>
+                <a href="#products" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">Products</a>
+                <a href="#koda" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">KODA</a>
+                <a href="#dojo" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">DOJO FEED</a>
+            </div>
+            
+            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})" class="md:hidden text-cyber-accent">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-cyber-accent/5 via-transparent to-transparent"></div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyber-gray/50 border border-cyber-accent/30 mb-8 animate-float">
+                <span class="w-2 h-2 rounded-full bg-cyber-accent animate-pulse"></span>
+                <span class="text-sm text-gray-300 font-mono">Next-Gen Developer Tools</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
+                <span class="glitch-text block mb-2" data-text="BUILDING">BUILDING</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent via-cyber-purple to-cyber-pink neon-text">THE FUTURE</span>
+                <span class="block mt-2">OF DEVELOPMENT</span>
+            </h1>
+            
+            <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed">
+                Premium web software solutions for the next generation of developers. 
+                AI-powered tools, social platforms, and innovative coding experiences crafted with precision.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#products" class="cyber-btn px-8 py-4 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all">
+                    Explore Products
+                </a>
+                <a href="https://koda-aicodementortemp.netlify.app/" target="_blank" class="cyber-btn px-8 py-4 border border-cyber-accent text-cyber-accent font-semibold rounded-lg hover:bg-cyber-accent/10 transition-all">
+                    Try KODA AI
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-6 h-6 text-cyber-accent"></i>
+        </div>
+    </section>
+
+    <!-- Products Overview Section -->
+    <section id="products" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-purple">OUR PRODUCTS</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Innovative tools designed to empower developers of all skill levels
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- KODA Card -->
+                <div onclick="scrollToProduct('koda')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-accent/50">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-accent to-cyber-purple flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="code-2" class="w-8 h-8 text-black"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-accent transition-colors">KODA</h3>
+                    <p class="text-gray-400 mb-4">AI-powered coding mentor for beginners. Get instant help with Python, JavaScript, debugging, and project building.</p>
+                    <div class="flex items-center text-cyber-accent font-mono text-sm">
+                        <span>Explore Product</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+                
+                <!-- DOJO FEED Card -->
+                <div onclick="scrollToProduct('dojo')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-purple/50">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-purple to-cyber-pink flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="users" class="w-8 h-8 text-black"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-purple transition-colors">DOJO FEED</h3>
+                    <p class="text-gray-400 mb-4">Social network for Gen-Alpha developers. Share your builds, get feedback, and connect with young builders worldwide.</p>
+                    <div class="flex items-center text-cyber-purple font-mono text-sm">
+                        <span>Explore Product</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+                
+                <!-- KODA Code Jam Card -->
+                <div onclick="scrollToProduct('codejam')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-pink/50">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-pink to-cyber-purple flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="trophy" class="w-8 h-8 text-black"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-pink transition-colors">KODA CODE JAM</h3>
+                    <p class="text-gray-400 mb-4">Global 7-day coding tournament where developers build and deploy niche-market, single-page websites.</p>
+                    <div class="flex items-center text-cyber-pink font-mono text-sm">
+                        <span>Explore Product</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+                
+                <!-- SCRIBE Card -->
+                <div onclick="scrollToProduct('scribe')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-accent/50">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-accent to-cyber-purple flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="file-text" class="w-8 h-8 text-black"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-accent transition-colors">SCRIBE</h3>
+                    <p class="text-gray-400 mb-4">Lightweight, high-performance markdown formatting tool for clean, beautifully structured documentation.</p>
+                    <div class="flex items-center text-cyber-accent font-mono text-sm">
+                        <span>Explore Product</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KODA Section -->
+    <section id="koda" class="product-section py-32 relative bg-gradient-to-b from-cyber-dark to-cyber-black">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyber-accent/10 via-transparent to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 mb-6">
+                        <span class="text-xs text-cyber-accent font-mono">AI-POWERED</span>
+                    </div>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-purple">KODA</span>
+                    </h2>
+                    <h3 class="text-2xl text-gray-400 mb-6">AI Coding Mentor for Beginners</h3>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                        KODA is an intelligent coding assistant designed specifically for beginner developers. 
+                        Whether you're learning Python, building your first web app, or stuck on a bug, 
+                        KODA provides step-by-step guidance, clean code examples, and patient explanations.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Instant Help</h4>
+                                <p class="text-gray-400 text-sm">Get immediate assistance with Python, JavaScript, and debugging</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Project Building</h4>
+                                <p class="text-gray-400 text-sm">Build real projects with guided step-by-step instructions</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Mobile-First</h4>
+                                <p class="text-gray-400 text-sm">Built entirely on a $150 phone - powerful tools don't need expensive hardware</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://koda-aicodementortemp.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all">
+                        <span>Launch KODA</span>
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                    </a>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-accent to-cyber-purple rounded-3xl blur-3xl opacity-20"></div>
+                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50">
+                        <div class="font-mono text-sm mb-4">
+                            <span class="text-cyber-pink">user@koda</span>:<span class="text-cyber-accent">~</span>$ python3 hello.py
+                        </div>
+                        <div class="space-y-2 font-mono text-sm">
+                            <div class="text-gray-400"># KODA AI Assistant Example</div>
+                            <div><span class="text-cyber-purple">def</span> <span class="text-cyber-accent">greet</span>(name):</div>
+                            <div class="pl-4 text-gray-300">return f"Hello, {name}! Ready to code?"</div>
+                            <div class="text-gray-500 mt-4"># AI Response:</div>
+                            <div class="text-cyber-accent">"Great start! Let's add error handling..."</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOJO FEED Section -->
+    <section id="dojo" class="product-section py-32 relative">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-cyber-purple/10 via-transparent to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-purple to-cyber-pink rounded-3xl blur-3xl opacity-20"></div>
+                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4 p-4 rounded-xl bg-cyber-dark/50 border border-cyber-gray/50">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-purple to-cyber-pink"></div>
+                                <div class="flex-1">
+                                    <div class="h-3 bg-cyber-gray rounded mb-2 w-32"></div>
+                                    <div class="h-2 bg-cyber-gray rounded w-48"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 rounded-xl bg-cyber-dark/50 border border-cyber-gray/50 ml-8">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-accent to-cyber-purple"></div>
+                                <div class="flex-1">
+                                    <div class="h-3 bg-cyber-gray rounded mb-2 w-24"></div>
+                                    <div class="h-2 bg-cyber-gray rounded w-40"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4 p-4 rounded-xl bg-cyber-dark/50 border border-cyber-gray/50">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-pink to-cyber-purple"></div>
+                                <div class="flex-1">
+                                    <div class="h-3 bg-cyber-gray rounded mb-2 w-36"></div>
+                                    <div class="h-2 bg-cyber-gray rounded w-52"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-purple/10 border border-cyber-purple/30 mb-6">
+                        <span class="text-xs text-cyber-purple font-mono">SOCIAL PLATFORM</span>
+                    </div>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-purple to-cyber-pink">DOJO FEED</span>
+                    </h2>
+                    <h3 class="text-2xl text-gray-400 mb-6">Social Network for Gen-Alpha Developers</h3>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                        Dojo Feed is a developer-first social platform built for the next generation of coders. 
+                        Unlike traditional tech communities, Dojo Feed is designed for young builders, 
+                        solo developers, and self-taught programmers who are shipping real projects.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-purple/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-purple"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Share Your Builds</h4>
+                                <p class="text-gray-400 text-sm">Showcase your projects and get real feedback from peers</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-purple/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-purple"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">No Gatekeeping</h4>
+                                <p class="text-gray-400 text-sm">Just building - supportive community for all skill levels</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-purple/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-purple"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Find Collaborators</h4>
+                                <p class="text-gray-400 text-sm">Connect with like-minded developers worldwide</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://dojofeed.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-purple text-white font-semibold rounded-lg hover:bg-cyber-purple/90 transition-all">
+                        <span>Join DOJO FEED</span>
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KODA Code Jam Section -->
+    <section id="codejam" class="product-section py-32 relative bg-gradient-to-b from-cyber-black to-cyber-dark">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyber-pink/10 via-transparent to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-pink/10 border border-cyber-pink/30 mb-6">
+                        <span class="text-xs text-cyber-pink font-mono">COMPETITION</span>
+                    </div>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-pink to-cyber-purple">KODA CODE JAM</span>
+                    </h2>
+                    <h3 class="text-2xl text-gray-400 mb-6">Global 7-Day Coding Tournament</h3>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                        KODA Code Jam is a global 7-day coding tournament where developers build and deploy 
+                        niche-market, single-page websites using the KODA AI mentor. Code, deploy, and 
+                        showcase your project to win permanent platform rewards.
+                    </p>
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="text-center p-4 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
+                            <div class="text-3xl font-bold text-cyber-pink mb-1">7</div>
+                            <div class="text-xs text-gray-400">Days</div>
+                        </div>
+                        <div class="text-center p-4 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
+                            <div class="text-3xl font-bold text-cyber-pink mb-1">24/7</div>
+                            <div class="text-xs text-gray-400">AI Support</div>
+                        </div>
+                        <div class="text-center p-4 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
+                            <div class="text-3xl font-bold text-cyber-pink mb-1">∞</div>
+                            <div class="text-xs text-gray-400">Possibilities</div>
+                        </div>
+                    </div>
+                    <a href="https://kodacodejam.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-pink text-white font-semibold rounded-lg hover:bg-cyber-pink/90 transition-all">
+                        <span>Join Code Jam</span>
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                    </a>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-pink to-cyber-purple rounded-3xl blur-3xl opacity-20"></div>
+                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="trophy" class="w-6 h-6 text-cyber-pink"></i>
+                                <span class="font-bold">Leaderboard</span>
+                            </div>
+                            <span class="text-xs text-gray-400 font-mono">LIVE</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-cyber-dark/50 border border-cyber-pink/30">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-cyber-pink font-bold">1</span>
+                                    <span class="text-sm">DevMaster_99</span>
+                                </div>
+                                <span class="text-cyber-pink font-mono text-sm">2,450 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-cyber-dark/50 border border-cyber-gray/50">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-gray-400 font-bold">2</span>
+                                    <span class="text-sm">CodeNinja</span>
+                                </div>
+                                <span class="text-gray-400 font-mono text-sm">2,380 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-cyber-dark/50 border border-cyber-gray/50">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-gray-400 font-bold">3</span>
+                                    <span class="text-sm">ByteBuilder</span>
+                                </div>
+                                <span class="text-gray-400 font-mono text-sm">2,210 pts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCRIBE Section -->
+    <section id="scribe" class="product-section py-32 relative">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-cyber-accent/10 via-transparent to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-accent to-cyber-purple rounded-3xl blur-3xl opacity-20"></div>
+                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50 font-mono text-sm">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="text-gray-500"># Before SCRIBE</div>
+                            <div class="text-gray-400">messy markdown with   **bad** formatting</div>
+                            <div class="text-gray-400">and unstyled code blocks</div>
+                            <div class="text-cyber-accent mt-4"># After SCRIBE</div>
+                            <div class="text-cyber-purple">## Clean Documentation</div>
+                            <div class="text-gray-300">Beautifully structured</div>
+                            <div class="text-gray-300">with perfect formatting ✨</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 mb-6">
+                        <span class="text-xs text-cyber-accent font-mono">DEVELOPER TOOL</span>
+                    </div>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-purple">SCRIBE</span>
+                    </h2>
+                    <h3 class="text-2xl text-gray-400 mb-6">Markdown Formatting Tool</h3>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                        Scribe is a lightweight, high-performance markdown formatting tool designed to solve 
+                        a universal developer headache: turning messy syntax and unstyled code blocks into 
+                        clean, beautifully structured documentation instantly.
+                    </p>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">High Performance</h4>
+                                <p class="text-gray-400 text-sm">Lightweight and fast - built with vanilla JavaScript</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Mobile-Built</h4>
+                                <p class="text-gray-400 text-sm">Built entirely on an Android phone using Supabase</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Hackathon Inspiration</h4>
+                                <p class="text-gray-400 text-sm">Flagship inspiration for the global Scribe Jam hackathon</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="https://scribekit.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all">
+                        <span>Try SCRIBE</span>
+                        <i data-lucide="external-link" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 border-t border-cyber-gray/50 relative z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-cyber-orange to-cyber-accent rounded-lg flex items-center justify-center">
+                        <span class="font-bold text-black text-lg">H</span>
+                    </div>
+                    <span class="font-bold text-xl">HYNAWEB</span>
+                </div>
+                
+                <div class="text-gray-400 text-sm text-center md:text-right">
+                    <p>&copy; 2026 HYNAWEB. All rights reserved.</p>
+                    <p class="mt-1 text-cyber-accent/70">Built by Akhouri Systems for HYNAWEB.</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-cyber-gray/30 pt-8">
+                <div class="flex gap-6">
+                    <a href="#" class="w-10 h-10 rounded-full bg-cyber-gray/30 flex items-center justify-center hover:bg-cyber-accent/20 hover:text-cyber-accent transition-all">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-cyber-gray/30 flex items-center justify-center hover:bg-cyber-accent/20 hover:text-cyber-accent transition-all">
+                        <i data-lucide="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-cyber-gray/30 flex items-center justify-center hover:bg-cyber-accent/20 hover:text-cyber-accent transition-all">
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                    </a>
+                </div>
+                
+                <!-- Hidden Admin Access (Only visible on close inspection, requires password) -->
+                <button onclick="promptAdminAccess()" class="text-gray-700 hover:text-cyber-accent text-xs font-mono transition-colors tracking-widest uppercase">
+                    System Access
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Admin Panel (Hidden by default, secured) -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="min-h-screen bg-cyber-black">
+            <div class="border-b border-cyber-gray bg-cyber-dark/80 backdrop-blur-md sticky top-0 z-50">
+                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="shield" class="w-5 h-5 text-cyber-pink"></i>
+                        <h2 class="text-2xl font-bold text-cyber-pink font-mono">ADMIN CONTROL PANEL</h2>
+                    </div>
+                    <button onclick="toggleAdmin()" class="text-gray-400 hover:text-white transition-colors p-2 hover:bg-cyber-gray rounded-lg">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-6 py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- CRUD Form -->
+                    <div class="lg:col-span-1">
+                        <div class="p-6 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
+                            <h3 class="text-xl font-bold mb-6 font-mono" id="formTitle">Add New Product</h3>
+                            <form id="productForm" class="space-y-4">
+                                <input type="hidden" id="productId">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2 font-mono">Product Name</label>
+                                    <input type="text" id="productName" required class="w-full px-4 py-3 rounded-lg bg-cyber-dark border border-cyber-gray focus:border-cyber-accent focus:outline-none transition-colors text-white" placeholder="Enter product name">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2 font-mono">Description</label>
+                                    <textarea id="productDesc" rows="4" required class="w-full px-4 py-3 rounded-lg bg-cyber-dark border border-cyber-gray focus:border-cyber-accent focus:outline-none transition-colors text-white" placeholder="Enter description"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2 font-mono">URL</label>
+                                    <input type="url" id="productUrl" required class="w-full px-4 py-3 rounded-lg bg-cyber-dark border border-cyber-gray focus:border-cyber-accent focus:outline-none transition-colors text-white" placeholder="https://...">
+                                </div>
+                                <div class="flex gap-3 pt-4">
+                                    <button type="submit" class="flex-1 py-3 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all font-mono">
+                                        SAVE PRODUCT
+                                    </button>
+                                    <button type="button" onclick="resetForm()" class="px-6 py-3 border border-cyber-gray rounded-lg hover:bg-cyber-gray/50 transition-all font-mono text-sm">
+                                        CANCEL
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Products List -->
+                    <div class="lg:col-span-2">
+                        <div class="p-6 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
+                            <h3 class="text-xl font-bold mb-6 font-mono">Product Management (CRUD)</h3>
+                            <div id="productsList" class="space-y-4">
+                                <!-- Products will be rendered here via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+        
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1200);
+        });
+        
+        // Initialize Lenis Smooth Scroll (120Hz feel on 60Hz displays)
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+        });
+        
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX - 10 + 'px';
+                cursorFollower.style.top = e.clientY - 10 + 'px';
+            }, 100);
+        });
+        
+        document.addEventListener('mousedown', () => { cursor.style.transform = 'scale(0.8)'; });
+        document.addEventListener('mouseup', () => { cursor.style.transform = 'scale(1)'; });
+        
+        // Particle System
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const particleCount = 40;
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); }
+        
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => { particle.update(); particle.draw(); });
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 150) {
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - distance / 150)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        
+        // Smooth Scroll to Product
+        function scrollToProduct(productId) {
+            const element = document.getElementById(productId);
+            if (element) {
+                lenis.scrollTo(element, { offset: -100 });
+                element.classList.add('active');
+            }
+        }
+        
+        // Intersection Observer for Product Sections
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { entry.target.classList.add('active'); }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+        
+        document.querySelectorAll('.product-section').forEach(section => { observer.observe(section); });
+        
+        // ==========================================
+        // SECURED ADMIN PANEL FUNCTIONS
+        // ==========================================
+        
+        // 1. Password Prompt (Hides admin from random visitors)
+        function promptAdminAccess() {
+            const password = prompt("Enter Admin Password:");
+            // Default password is 'akhouri'. You can change this.
+            if (password === "akhouri") {
+                document.getElementById('adminPanel').classList.add('active');
+                loadProducts();
+                lucide.createIcons();
+            } else if (password !== null) {
+                alert("Access Denied: Incorrect Password");
+            }
+        }
+        
+        // 2. Toggle Admin Panel Visibility
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.remove('active');
+        }
+        
+        // 3. CRUD Operations with localStorage
+        let products = JSON.parse(localStorage.getItem('hynaweb_products')) || [
+            { id: 1, name: 'KODA', description: 'AI-powered coding mentor for beginners', url: 'https://koda-aicodementortemp.netlify.app/' },
+            { id: 2, name: 'DOJO FEED', description: 'Social network for Gen-Alpha developers', url: 'https://dojofeed.netlify.app/' },
+            { id: 3, name: 'KODA Code Jam', description: 'Global 7-day coding tournament', url: 'https://kodacodejam.netlify.app/' },
+            { id: 4, name: 'SCRIBE', description: 'Lightweight markdown formatting tool', url: 'https://scribekit.netlify.app/' }
+        ];
+        
+        function saveProducts() {
+            localStorage.setItem('hynaweb_products', JSON.stringify(products));
+        }
+        
+        function loadProducts() {
+            const list = document.getElementById('productsList');
+            if (products.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 text-center py-8 font-mono">No products found. Add one to get started.</p>';
+                return;
+            }
+            
+            list.innerHTML = products.map(product => `
+                <div class="p-4 rounded-lg bg-cyber-dark/50 border border-cyber-gray/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex-1">
+                        <h4 class="font-semibold mb-1 text-cyber-accent font-mono">${product.name}</h4>
+                        <p class="text-sm text-gray-400 mb-2">${product.description}</p>
+                        <a href="${product.url}" target="_blank" class="text-xs text-gray-500 hover:text-cyber-accent transition-colors font-mono truncate block max-w-md">${product.url}</a>
+                    </div>
+                    <div class="flex gap-2 shrink-0">
+                        <button onclick="editProduct(${product.id})" class="p-2 rounded-lg bg-cyber-gray/50 hover:bg-cyber-accent/20 text-cyber-accent transition-all" title="Edit">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="deleteProduct(${product.id})" class="p-2 rounded-lg bg-cyber-gray/50 hover:bg-red-500/20 text-red-500 transition-all" title="Delete">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+        
+        document.getElementById('productForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('productId').value;
+            const name = document.getElementById('productName').value;
+            const description = document.getElementById('productDesc').value;
+            const url = document.getElementById('productUrl').value;
+            
+            if (id) {
+                const index = products.findIndex(p => p.id == id);
+                if (index !== -1) { products[index] = { id: parseInt(id), name, description, url }; }
+            } else {
+                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                products.push({ id: newId, name, description, url });
+            }
+            
+            saveProducts();
+            loadProducts();
+            resetForm();
+        });
+        
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productDesc').value = product.description;
+                document.getElementById('productUrl').value = product.url;
+                document.getElementById('formTitle').textContent = 'Edit Product';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                loadProducts();
+            }
+        }
+        
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('formTitle').textContent = 'Add New Product';
+        }
+        
+        // Magnetic Effect for Nav
+        document.querySelectorAll('.magnetic').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            el.addEventListener('mouseleave', () => { el.style.transform = 'translate(0, 0)'; });
+        });
+        
+        // Glitch Effect on Hover
+        document.querySelectorAll('.glitch-text').forEach(el => {
+            el.addEventListener('mouseenter', () => { el.style.animation = 'glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite'; });
+            el.addEventListener('mouseleave', () => { el.style.animation = ''; });
+        });
+    </script>
+</body>
+</html>
