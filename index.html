@@ -1,979 +1,622 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="HYNAWEB - Premium Web Software Solutions. Creators of KODA AI Coding Mentor, DOJO FEED, KODA Code Jam, and SCRIBE. Building the future of developer tools.">
-    <meta name="keywords" content="HYNAWEB, KODA, AI coding mentor, DOJO FEED, developer social network, SCRIBE, markdown tool, web software, coding tools, Akhouri Systems">
-    <meta name="author" content="Akhouri Systems for HYNAWEB">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="HYNAWEB | Premium Developer Tools & Software">
-    <meta property="og:description" content="AI-powered coding mentors, developer social networks, and next-gen development tools.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://hynaweb.com">
-    
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="HYNAWEB | Next-Gen Developer Tools">
-    <meta name="twitter:description" content="Revolutionary software for the next generation of developers.">
-    
-    <title>HYNAWEB | Premium Developer Tools & Software Solutions</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lenis Smooth Scroll -->
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        cyber: {
-                            black: '#050505',
-                            dark: '#0a0a0a',
-                            gray: '#1a1a1a',
-                            accent: '#00f0ff',
-                            pink: '#ff00ff',
-                            purple: '#b829dd',
-                            orange: '#ff9500',
-                        }
-                    },
-                    animation: {
-                        'glitch': 'glitch 1s linear infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        glitch: {
-                            '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
-                            '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
-                            '62%': { transform: 'translate(0,0) skew(5deg)' },
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { background-color: #050505; color: #ffffff; overflow-x: hidden; cursor: none; }
-        
-        /* Custom Cursor */
-        .cursor { width: 20px; height: 20px; border: 2px solid #00f0ff; border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: transform 0.1s; mix-blend-mode: difference; }
-        .cursor-follower { width: 40px; height: 40px; background: rgba(0, 240, 255, 0.1); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; transition: transform 0.3s ease-out; }
-        
-        /* Loading Screen */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-        .hyna-character { width: 200px; height: 200px; position: relative; animation: float 3s ease-in-out infinite; }
-        .hyna-head { width: 120px; height: 140px; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 3px solid #00f0ff; border-radius: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 30px rgba(0, 240, 255, 0.1); }
-        .hyna-eyes { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); display: flex; gap: 25px; }
-        .hyna-eye { width: 25px; height: 12px; background: #ff0000; border-radius: 50%; box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 60px #ff0000; animation: eyeGlow 2s ease-in-out infinite; }
-        @keyframes eyeGlow { 0%, 100% { opacity: 1; box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000; } 50% { opacity: 0.7; box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000; } }
-        .loading-bar { width: 200px; height: 3px; background: #1a1a1a; margin-top: 40px; position: relative; overflow: hidden; }
-        .loading-progress { position: absolute; left: 0; top: 0; height: 100%; background: linear-gradient(90deg, #00f0ff, #ff00ff); width: 0%; animation: loadProgress 1.2s ease-out forwards; }
-        @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
-        
-        /* Grid Background */
-        .cyber-grid { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px); background-size: 50px 50px; pointer-events: none; z-index: 0; }
-        
-        /* Glitch Effect */
-        .glitch-text { position: relative; display: inline-block; }
-        .glitch-text::before, .glitch-text::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .glitch-text::before { animation: glitch-1 2s infinite; color: #00f0ff; z-index: -1; }
-        .glitch-text::after { animation: glitch-2 2s infinite; color: #ff00ff; z-index: -2; }
-        @keyframes glitch-1 { 0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); } 20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); } 40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, -2px); } 60% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 0); } 80% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); } }
-        @keyframes glitch-2 { 0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); } 20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); } 40% { clip-path: inset(30% 0 40% 0); transform: translate(-2px, 2px); } 60% { clip-path: inset(10% 0 80% 0); transform: translate(2px, 0); } 80% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, -2px); } }
-        
-        /* Neon Glow */
-        .neon-text { text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3); }
-        
-        /* Card Hover Effects */
-        .cyber-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
-        .cyber-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 20px 40px rgba(0, 240, 255, 0.15); }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #00f0ff; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00d0e0; }
-        
-        /* Product Section Transitions */
-        .product-section { opacity: 0; transform: translateY(50px); transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .product-section.active { opacity: 1; transform: translateY(0); }
-        
-        /* Button Styles */
-        .cyber-btn { position: relative; overflow: hidden; transition: all 0.3s; }
-        .cyber-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
-        .cyber-btn:hover::before { left: 100%; }
-        .cyber-btn:hover { box-shadow: 0 0 30px rgba(0, 240, 255, 0.3); transform: translateY(-2px); }
-        
-        /* Admin Panel Styles */
-        .admin-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.98); z-index: 9999; overflow-y: auto; backdrop-filter: blur(10px); }
-        .admin-panel.active { display: block; }
-        
-        /* Scanline Effect */
-        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1)); background-size: 100% 4px; pointer-events: none; z-index: 9998; opacity: 0.3; }
-        
-        /* Magnetic Effect */
-        .magnetic { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* Particle Canvas */
-        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        
-        /* Logo Banner Styles */
-        .logo-banner {
-            background: linear-gradient(135deg, rgba(26,26,26,0.9) 0%, rgba(10,10,10,0.9) 100%);
-            border: 1px solid rgba(255, 149, 0, 0.3);
-            box-shadow: 0 0 40px rgba(255, 149, 0, 0.15), inset 0 0 40px rgba(255, 149, 0, 0.05);
-        }
-        .logo-banner:hover {
-            box-shadow: 0 0 60px rgba(255, 149, 0, 0.25), inset 0 0 40px rgba(255, 149, 0, 0.05);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HYNAWEB | Premium Developer Tools & Software Solutions</title>
+<meta name="description" content="HYNAWEB — next-gen developer tools: KODA AI coding mentor, DOJO FEED social platform, KODA CODE JAM global tournament and SCRIBE markdown formatter.">
+<meta name="theme-color" content="#EEF1F4">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 68 64'><polygon points='38,0 47,14 29,14' fill='%23F7941E'/><polygon points='24,18 36,18 32,26 40,26 36,34 26,34 15,62 3,62' fill='%2326292E'/><polygon points='38,18 50,18 64,40 50,62 38,62 52,40' fill='%23F7941E'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1F4; --card:#FFFFFF; --ink:#26292E; --ink2:#5B6470; --line:#DFE4EA;
+  --or:#F7941E; --or-d:#E07F00; --or-t:rgba(247,148,30,.12); --or-t2:rgba(247,148,30,.22);
+  --dark:#22262B; --dark2:#1B1E22; --dark3:#2A2E34;
+  --fd:'Montserrat',sans-serif; --fb:'Manrope',sans-serif; --fm:'JetBrains Mono',monospace;
+  --sh:0 12px 34px rgba(38,41,46,.10); --sh-lg:0 24px 60px rgba(38,41,46,.14);
+  --ez:cubic-bezier(.22,.7,.25,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:86px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);line-height:1.65;overflow-x:hidden;text-rendering:optimizeLegibility}
+::selection{background:var(--or);color:#fff}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+.mono{font-family:var(--fm)}
+/* ============ PRELOADER ============ */
+#loader{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .55s ease,visibility .55s}
+#loader.hide{opacity:0;visibility:hidden}
+#loader .lmk{width:74px;height:70px;color:var(--ink)}
+#loader .lmk .tri{animation:drop .9s var(--ez) both}
+#loader .lmk .chev{animation:slide .9s .15s var(--ez) both}
+#loader .lmk .stk{animation:slide2 .9s .05s var(--ez) both}
+@keyframes drop{from{transform:translateY(-26px);opacity:0}}
+@keyframes slide{from{transform:translateX(26px);opacity:0}}
+@keyframes slide2{from{transform:translateX(-26px);opacity:0}}
+#loader .lt{font-family:var(--fm);font-size:12px;letter-spacing:.34em;color:var(--ink2)}
+#loader .lt::after{content:'';animation:dots 1.2s steps(4) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+#loader .lb{width:180px;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+#loader .lb i{display:block;height:100%;width:40%;background:var(--or);border-radius:3px;animation:load 1.1s var(--ez) infinite}
+@keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(460%)}}
+/* ============ PROGRESS + HEADER ============ */
+#prog{position:fixed;top:0;left:0;height:3px;width:0;background:var(--or);z-index:120}
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(238,241,244,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s,background .3s}
+header.sc{border-color:var(--line);box-shadow:0 6px 24px rgba(38,41,46,.07);background:rgba(255,255,255,.86)}
+.hin{display:flex;align-items:center;height:70px;gap:26px}
+.logo{display:flex;align-items:center;gap:11px;color:var(--ink)}
+.logo svg{width:36px;height:34px;transition:transform .4s var(--ez)}
+.logo:hover svg{transform:translateY(-2px) rotate(-3deg)}
+.wm{font-family:var(--fd);font-size:21px;letter-spacing:.01em;line-height:1}
+.wm b{font-weight:800}
+.wm span{font-weight:300}
+nav.desk{display:flex;gap:6px;margin-left:auto}
+nav.desk a{font-family:var(--fm);font-size:12px;letter-spacing:.14em;color:var(--ink2);padding:9px 13px;border-radius:8px;position:relative;transition:color .25s,background .25s}
+nav.desk a:hover{color:var(--ink);background:var(--or-t)}
+nav.desk a.active{color:var(--ink)}
+nav.desk a.active::after{content:"";position:absolute;left:13px;right:13px;bottom:4px;height:2px;background:var(--or);border-radius:2px}
+.hcta{display:flex;align-items:center;gap:12px;margin-left:8px}
+.burger{display:none;margin-left:auto;width:44px;height:44px;border:1px solid var(--line);background:var(--card);border-radius:10px;position:relative}
+.burger i{position:absolute;left:12px;right:12px;height:2px;background:var(--ink);border-radius:2px;transition:transform .35s var(--ez),opacity .25s,top .35s}
+.burger i:nth-child(1){top:15px}.burger i:nth-child(2){top:21px}.burger i:nth-child(3){top:27px}
+body.mopen .burger i:nth-child(1){top:21px;transform:rotate(45deg)}
+body.mopen .burger i:nth-child(2){opacity:0}
+body.mopen .burger i:nth-child(3){top:21px;transform:rotate(-45deg)}
+.mnav{position:fixed;top:0;right:0;bottom:0;width:min(320px,84vw);background:var(--card);z-index:110;transform:translateX(102%);transition:transform .45s var(--ez);padding:96px 30px 30px;box-shadow:var(--sh-lg);display:flex;flex-direction:column;gap:6px}
+body.mopen .mnav{transform:none}
+.mnav a{font-family:var(--fd);font-weight:800;font-size:22px;text-transform:uppercase;padding:14px 4px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.mnav a small{font-family:var(--fm);font-weight:400;font-size:10px;color:var(--or);letter-spacing:.2em}
+.mveil{position:fixed;inset:0;background:rgba(38,41,46,.4);z-index:105;opacity:0;visibility:hidden;transition:.4s}
+body.mopen .mveil{opacity:1;visibility:visible}
+/* ============ BUTTONS ============ */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fd);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;padding:15px 26px;border-radius:12px;border:none;position:relative;overflow:hidden;transition:transform .25s var(--ez),box-shadow .25s,background .25s,color .25s;will-change:transform}
+.btn .ar{transition:transform .3s var(--ez)}
+.btn:hover .ar{transform:translateX(5px)}
+.btn:active{transform:scale(.97)}
+.btn.p{background:var(--or);color:#fff;box-shadow:0 10px 26px rgba(247,148,30,.35)}
+.btn.p:hover{background:var(--or-d);transform:translateY(-3px);box-shadow:0 16px 34px rgba(247,148,30,.42)}
+.btn.p::before{content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);transition:left .55s}
+.btn.p:hover::before{left:130%}
+.btn.s{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.btn.s:hover{background:var(--ink);color:#fff;transform:translateY(-3px)}
+.btn.sm{padding:11px 18px;font-size:11px;border-radius:10px}
+/* ============ HERO ============ */
+#home{min-height:100svh;display:flex;align-items:center;position:relative;padding:130px 0 90px;overflow:hidden}
+#home::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,rgba(38,41,46,.07) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(ellipse 80% 70% at 50% 40%,#000 20%,transparent 100%)}
+#home::after{content:"";position:absolute;top:-140px;right:-160px;width:560px;height:560px;background:radial-gradient(circle,var(--or-t2),transparent 65%);pointer-events:none}
+.hero-wm{position:absolute;right:-40px;bottom:-60px;width:min(46vw,520px);color:rgba(38,41,46,.05);pointer-events:none}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.3em;color:var(--or-d);text-transform:uppercase;margin-bottom:22px;display:inline-flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:34px;height:2px;background:var(--or)}
+h1.hero{font-family:var(--fd);font-weight:800;text-transform:uppercase;font-size:clamp(38px,7.4vw,86px);line-height:1.02;letter-spacing:-.015em;max-width:12ch}
+h1.hero .wsp{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+h1.hero .w{display:inline-block;transform:translateY(112%);opacity:0;transition:transform .8s var(--ez),opacity .6s;transition-delay:calc(var(--i)*75ms)}
+body.ready h1.hero .w{transform:none;opacity:1}
+h1.hero .hl{color:var(--or);position:relative}
+.hero-sub{color:var(--ink2);font-size:clamp(15px,1.6vw,18px);max-width:56ch;margin:26px 0 34px;opacity:0;transform:translateY(18px);transition:.8s .5s var(--ez)}
+body.ready .hero-sub{opacity:1;transform:none}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;opacity:0;transform:translateY(18px);transition:.8s .65s var(--ez)}
+body.ready .hero-cta{opacity:1;transform:none}
+.hero-stats{display:flex;gap:34px;margin-top:56px;flex-wrap:wrap;opacity:0;transition:1s .85s}
+body.ready .hero-stats{opacity:1}
+.hs b{font-family:var(--fd);font-weight:800;font-size:26px;display:block;line-height:1.1}
+.hs b em{font-style:normal;color:var(--or)}
+.hs span{font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;color:var(--ink2);text-transform:uppercase}
+/* ============ SECTIONS ============ */
+section{padding:100px 0;position:relative}
+.shead{margin-bottom:52px}
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--or-d);background:var(--or-t);border:1px solid var(--or-t2);padding:7px 14px;border-radius:999px;margin-bottom:18px}
+.chip::before{content:"";width:6px;height:6px;background:var(--or);border-radius:50%}
+h2.tt{font-family:var(--fd);font-weight:800;text-transform:uppercase;font-size:clamp(28px,4.6vw,52px);letter-spacing:-.01em;line-height:1.06}
+.shead p.sub{color:var(--ink2);max-width:60ch;margin-top:14px;font-size:clamp(14px,1.5vw,17px)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .75s var(--ez),transform .75s var(--ez);transition-delay:var(--d,0s)}
+.rv.l{transform:translateX(-32px)}.rv.r{transform:translateX(32px)}.rv.z{transform:scale(.94)}
+.rv.in{opacity:1;transform:none}
+/* ============ PRODUCTS ============ */
+#products{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.pcard{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:30px 26px;position:relative;overflow:hidden;transition:transform .35s var(--ez),box-shadow .35s,border-color .35s;display:flex;flex-direction:column}
+.pcard::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--or);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ez)}
+.pcard:hover{transform:translateY(-8px);box-shadow:var(--sh-lg);border-color:var(--or-t2);background:var(--card)}
+.pcard:hover::before{transform:scaleX(1)}
+.pcard .idx{font-family:var(--fm);font-size:11px;color:var(--or-d);letter-spacing:.2em}
+.pcard h3{font-family:var(--fd);font-weight:800;font-size:21px;text-transform:uppercase;margin:12px 0 10px;letter-spacing:.01em}
+.pcard p{color:var(--ink2);font-size:14px;flex:1}
+.pcard .ex{margin-top:20px;font-family:var(--fm);font-size:12px;letter-spacing:.14em;color:var(--ink);font-weight:600;display:inline-flex;align-items:center;gap:8px;text-transform:uppercase}
+.pcard .ex .ar{color:var(--or);transition:transform .3s var(--ez)}
+.pcard:hover .ex .ar{transform:translateX(6px)}
+.pcard .ex:hover{color:var(--or-d)}
+/* ============ SPLIT SECTIONS ============ */
+.split{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}
+.split.rev .txt{order:2}
+h3.st{font-family:var(--fd);font-weight:600;font-size:clamp(17px,2.2vw,23px);margin:6px 0 16px;color:var(--ink)}
+.split .txt p.bd{color:var(--ink2);font-size:15.5px;margin-bottom:26px}
+.flist{display:grid;gap:16px;margin-bottom:30px}
+.fi{display:flex;gap:14px;align-items:flex-start}
+.fi .ic{flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:var(--or-t);border:1px solid var(--or-t2);display:grid;place-items:center;color:var(--or-d)}
+.fi h4{font-family:var(--fd);font-weight:800;font-size:14.5px;text-transform:uppercase;letter-spacing:.04em}
+.fi p{color:var(--ink2);font-size:13.5px}
+/* terminal */
+.term{background:var(--dark2);border-radius:18px;overflow:hidden;box-shadow:var(--sh-lg);border:1px solid #33383e}
+.term .tb{display:flex;align-items:center;gap:7px;padding:13px 16px;background:var(--dark3);border-bottom:1px solid #383d44}
+.term .tb i{width:11px;height:11px;border-radius:50%}
+.term .tb i:nth-child(1){background:var(--or)}.term .tb i:nth-child(2){background:#5B6470}.term .tb i:nth-child(3){background:#3f454c}
+.term .tb span{margin-left:8px;font-family:var(--fm);font-size:11px;color:#8a919c;letter-spacing:.08em}
+.term .tbd{padding:20px;font-family:var(--fm);font-size:12.8px;line-height:2;min-height:200px;color:#d7dbe0;white-space:pre-wrap}
+.term .c-cmd{color:#fff}.term .c-com{color:#7d8590}.term .c-or{color:var(--or)}.term .c-gr{color:#7fb069}
+.term .cur{display:inline-block;width:8px;height:13px;background:var(--or);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+/* feed mock */
+.feed{position:relative;height:340px}
+.post{position:absolute;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--sh);width:min(360px,88%);transition:transform .4s var(--ez)}
+.post:hover{transform:translateY(-6px) rotate(0deg)!important}
+.post .ph{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.post .av{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-family:var(--fd);font-weight:800;color:#fff;font-size:15px}
+.post .ph b{font-family:var(--fm);font-size:12.5px;display:block}
+.post .ph span{font-family:var(--fm);font-size:10px;color:var(--ink2);letter-spacing:.12em}
+.post p{font-size:13px;color:var(--ink2)}
+.post .tags{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.post .tags i{font-style:normal;font-family:var(--fm);font-size:10px;color:var(--or-d);background:var(--or-t);padding:4px 9px;border-radius:999px}
+.post .react{display:flex;gap:16px;margin-top:12px;font-family:var(--fm);font-size:11px;color:var(--ink2)}
+.post .react b{color:var(--or-d)}
+.post.p1{top:0;left:0;transform:rotate(-2.5deg);animation:float1 6s ease-in-out infinite}
+.post.p2{bottom:0;right:0;transform:rotate(2deg);animation:float2 7s ease-in-out infinite}
+@keyframes float1{50%{margin-top:10px}}
+@keyframes float2{50%{margin-bottom:12px}}
+/* ============ CODE JAM (dark) ============ */
+#codejam{background:var(--dark);color:#E8EAED;overflow:hidden}
+#codejam::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:54px 54px;mask-image:radial-gradient(ellipse 70% 60% at 50% 0%,#000,transparent 100%)}
+#codejam::after{content:"";position:absolute;bottom:-180px;left:-140px;width:520px;height:520px;background:radial-gradient(circle,rgba(247,148,30,.16),transparent 65%)}
+#codejam .chip{background:rgba(247,148,30,.14);border-color:rgba(247,148,30,.3);color:var(--or)}
+#codejam h3.st{color:#c9cdd3}
+#codejam .txt p.bd{color:#9aa1ab}
+#codejam .fi h4{color:#fff}
+#codejam .fi p{color:#9aa1ab}
+#codejam .fi .ic{background:rgba(247,148,30,.16);border-color:rgba(247,148,30,.3);color:var(--or)}
+.stats{display:flex;gap:14px;margin:6px 0 30px;flex-wrap:wrap}
+.stat{border:1px solid #3a3f46;background:var(--dark3);border-radius:14px;padding:16px 22px;min-width:118px;transition:transform .3s var(--ez),border-color .3s}
+.stat:hover{transform:translateY(-4px);border-color:var(--or)}
+.stat b{font-family:var(--fd);font-weight:800;font-size:30px;color:var(--or);display:block;line-height:1.1}
+.stat span{font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:#9aa1ab;text-transform:uppercase}
+.lb-card{background:var(--dark3);border:1px solid #3a3f46;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.lb-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #3a3f46;font-family:var(--fm);font-size:12px;letter-spacing:.18em;color:#c9cdd3}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--or);font-size:10.5px}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--or);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(247,148,30,.5)}50%{box-shadow:0 0 0 7px rgba(247,148,30,0)}}
+.lb-row{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid #343940;opacity:0;transform:translateX(24px);transition:.6s var(--ez);transition-delay:var(--d)}
+.lb-card.in .lb-row{opacity:1;transform:none}
+.lb-row:last-child{border-bottom:none}
+.lb-row .rk{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:13px;background:#3a3f46;color:#c9cdd3}
+.lb-row:first-of-type .rk{background:var(--or);color:#fff}
+.lb-row .nm{font-family:var(--fm);font-size:13.5px;color:#E8EAED;flex:1}
+.lb-row .pt{font-family:var(--fm);font-size:13.5px;color:var(--or);font-weight:600}
+/* ============ SCRIBE ============ */
+.scribe-mock{display:grid;gap:16px}
+.spanel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--sh);transition:transform .35s var(--ez),box-shadow .35s}
+.spanel:hover{transform:translateY(-5px);box-shadow:var(--sh-lg)}
+.spanel .sh{display:flex;align-items:center;gap:9px;font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;color:var(--ink2)}
+.spanel .sh i{width:8px;height:8px;border-radius:50%}
+.spanel.before .sh i{background:#c4cad2}
+.spanel.after{border-color:var(--or-t2)}
+.spanel.after .sh i{background:var(--or)}
+.spanel.after .sh b{color:var(--or-d)}
+.spanel pre{font-family:var(--fm);font-size:12.3px;line-height:1.9;white-space:pre-wrap;color:#8a919c}
+.spanel.after pre{color:var(--ink)}
+.spanel.after pre .h{color:var(--or-d);font-weight:600}
+.srun{display:inline-flex;align-items:center;gap:9px;margin-top:4px;font-family:var(--fm);font-size:11px;letter-spacing:.16em;color:var(--or-d);background:none;border:none;text-transform:uppercase;padding:6px 0}
+.srun .ar{transition:transform .3s var(--ez)}
+.srun:hover .ar{transform:translateX(5px)}
+.spanel.after{opacity:.35;transform:translateY(8px);transition:.6s var(--ez)}
+.scribe-mock.run .spanel.after{opacity:1;transform:none}
+.scribe-mock.run .spanel.before{opacity:.55}
+/* ============ FOOTER ============ */
+footer{background:var(--dark2);color:#9aa1ab;padding:56px 0 34px}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:22px;flex-wrap:wrap}
+footer .logo{color:#fff}
+footer .wm b{color:#fff}footer .wm span{color:#c9cdd3}
+.fmeta{font-family:var(--fm);font-size:11.5px;letter-spacing:.06em;line-height:2}
+.fmeta b{color:#c9cdd3;font-weight:600}
+.btn.ghost{background:transparent;border:1px solid #3a3f46;color:#c9cdd3}
+.btn.ghost:hover{border-color:var(--or);color:var(--or);transform:translateY(-2px)}
+.fbot{border-top:1px solid #2e3339;margin-top:34px;padding-top:22px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:var(--fm);font-size:11px;letter-spacing:.08em}
+/* ============ ADMIN MODAL ============ */
+.modal{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal .veil{position:absolute;inset:0;background:rgba(38,41,46,.55);backdrop-filter:blur(3px)}
+.modal .box{position:relative;background:var(--card);border-radius:20px;max-width:520px;width:100%;max-height:88svh;overflow:auto;padding:30px;box-shadow:var(--sh-lg);animation:pop .35s var(--ez)}
+@keyframes pop{from{transform:scale(.93) translateY(14px);opacity:0}}
+.modal .x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink2);font-size:16px}
+.modal .x:hover{color:var(--or-d);border-color:var(--or-t2)}
+.modal h3{font-family:var(--fd);font-weight:800;text-transform:uppercase;font-size:17px;letter-spacing:.06em;margin-bottom:4px}
+.modal .msub{font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;color:var(--or-d);text-transform:uppercase;margin-bottom:20px}
+.fld{margin-bottom:14px}
+.fld label{font-family:var(--fm);font-size:10.5px;letter-spacing:.18em;color:var(--ink2);text-transform:uppercase;display:block;margin-bottom:6px}
+.fld input,.fld textarea{width:100%;border:1.5px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 14px;font-family:var(--fb);font-size:14px;color:var(--ink);outline:none;transition:border-color .25s,background .25s;resize:vertical}
+.fld input:focus,.fld textarea:focus{border-color:var(--or);background:#fff}
+.macts{display:flex;gap:10px;margin-top:6px}
+.crud-h{font-family:var(--fm);font-size:10.5px;letter-spacing:.2em;color:var(--ink2);text-transform:uppercase;margin:24px 0 10px;display:flex;align-items:center;gap:10px}
+.crud-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.crow{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;background:var(--bg);transition:border-color .25s}
+.crow:hover{border-color:var(--or-t2)}
+.crow .cn{font-family:var(--fd);font-weight:800;font-size:13px;text-transform:uppercase;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .cu{font-family:var(--fm);font-size:10px;color:var(--ink2);max-width:38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow button{border:1px solid var(--line);background:#fff;border-radius:8px;font-family:var(--fm);font-size:10px;letter-spacing:.1em;padding:7px 10px;color:var(--ink2);transition:.25s}
+.crow button.ed:hover{color:var(--or-d);border-color:var(--or)}
+.crow button.dl:hover{color:#c0392b;border-color:#c0392b}
+/* ============ RESPONSIVE ============ */
+@media(max-width:960px){
+  .split{grid-template-columns:1fr;gap:40px}
+  .split.rev .txt{order:0}
+  nav.desk,.hcta{display:none}
+  .burger{display:block}
+  section{padding:76px 0}
+}
+@media(max-width:560px){
+  .hin{height:62px}
+  .logo svg{width:30px;height:28px}
+  .wm{font-size:18px}
+  #home{padding:110px 0 70px}
+  .hero-stats{gap:22px}
+  .btn{padding:14px 20px;font-size:12px}
+  .feed{height:380px}
+  .post{width:100%}
+  .crow .cu{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,h1.hero .w,.hero-sub,.hero-cta,.hero-stats,.lb-row{opacity:1!important;transform:none!important}
+}
+</style>
 </head>
-<body class="font-sans antialiased">
-    <!-- Custom Cursor -->
-    <div class="cursor hidden md:block"></div>
-    <div class="cursor-follower hidden md:block"></div>
-    
-    <!-- Scanlines -->
-    <div class="scanlines"></div>
-    
-    <!-- Grid Background -->
-    <div class="cyber-grid"></div>
-    
-    <!-- Particle Canvas -->
-    <canvas id="particles"></canvas>
-    
-    <!-- Loading Screen -->
-    <div id="loader">
-        <div class="hyna-character">
-            <div class="hyna-head">
-                <div class="hyna-eyes">
-                    <div class="hyna-eye"></div>
-                    <div class="hyna-eye"></div>
-                </div>
-            </div>
-        </div>
-        <div class="loading-bar">
-            <div class="loading-progress"></div>
-        </div>
-        <p class="mt-4 font-mono text-cyber-accent text-sm tracking-widest">INITIALIZING...</p>
-    </div>
-    
-    <!-- Logo Banner Section -->
-    <section class="relative py-20 px-6 overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-cyber-orange/5 via-transparent to-cyber-accent/5"></div>
-        <div class="max-w-5xl mx-auto relative z-10">
-            <div class="logo-banner rounded-2xl p-12 flex flex-col items-center justify-center">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 300'%3E%3Cg%3E%3C!-- Logo Icon --%3E%3Cpath d='M 100 220 L 180 80 L 220 80 L 160 160 L 220 160 L 220 200 L 140 200 L 100 220 Z' fill='%231a1a1a'/%3E%3Cpath d='M 200 220 L 200 80 L 240 80 L 280 140 L 240 200 L 200 220 Z' fill='%23ff9500'/%3E%3Cpath d='M 180 60 L 200 25 L 220 60 Z' fill='%23ff9500'/%3E%3C!-- HYNAWEB Text --%3E%3Ctext x='280' y='170' font-family='Arial Black, sans-serif' font-size='72' font-weight='900' fill='%231a1a1a'%3EHYNAWEB%3C/text%3E%3C/g%3E%3C/svg%3E" alt="HYNAWEB Logo" class="w-full max-w-2xl h-auto mb-6">
-                <p class="text-gray-400 text-lg font-mono tracking-wider">PREMIUM DEVELOPER TOOLS &amp; SOFTWARE SOLUTIONS</p>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-50 bg-cyber-black/80 backdrop-blur-md border-b border-cyber-gray/50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3 magnetic">
-                <div class="w-10 h-10 bg-gradient-to-br from-cyber-orange to-cyber-accent rounded-lg flex items-center justify-center">
-                    <span class="font-bold text-black text-lg">H</span>
-                </div>
-                <span class="font-bold text-xl tracking-tight">HYNAWEB</span>
-            </div>
-            
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#home" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">Home</a>
-                <a href="#products" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">Products</a>
-                <a href="#koda" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">KODA</a>
-                <a href="#dojo" class="text-sm text-gray-400 hover:text-cyber-accent transition-colors magnetic">DOJO FEED</a>
-            </div>
-            
-            <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})" class="md:hidden text-cyber-accent">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        </div>
+<body>
+
+<!-- logo symbol (matches banner mark) -->
+<svg style="display:none" aria-hidden="true"><symbol id="mark" viewBox="0 0 68 64">
+  <polygon class="tri" points="38,0 47,14 29,14" fill="#F7941E"/>
+  <polygon class="stk" points="24,18 36,18 32,26 40,26 36,34 26,34 15,62 3,62" fill="currentColor"/>
+  <polygon class="chev" points="38,18 50,18 64,40 50,62 38,62 52,40" fill="#F7941E"/>
+</symbol></svg>
+
+<div id="loader">
+  <svg class="lmk" viewBox="0 0 68 64"><use href="#mark"/></svg>
+  <div class="lt">INITIALIZING</div>
+  <div class="lb"><i></i></div>
+</div>
+
+<div id="prog"></div>
+
+<header id="hdr">
+  <div class="wrap hin">
+    <a class="logo" href="#home" aria-label="HYNAWEB home">
+      <svg viewBox="0 0 68 64"><use href="#mark"/></svg>
+      <span class="wm"><b>HYNA</b><span>WEB</span></span>
+    </a>
+    <nav class="desk">
+      <a href="#home" class="active">Home</a>
+      <a href="#products">Products</a>
+      <a href="#koda">KODA</a>
+      <a href="#dojo">DOJO FEED</a>
     </nav>
+    <div class="hcta"><a class="btn p sm" href="https://koda-aicodementortemp.netlify.app/" target="_blank" rel="noopener">Try KODA AI <span class="ar">→</span></a></div>
+    <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
+  </div>
+</header>
+<div class="mveil" id="mveil"></div>
+<nav class="mnav" id="mnav">
+  <a href="#home">Home <small>01</small></a>
+  <a href="#products">Products <small>02</small></a>
+  <a href="#koda">KODA <small>03</small></a>
+  <a href="#dojo">DOJO FEED <small>04</small></a>
+  <a href="#codejam">Code Jam <small>05</small></a>
+  <a href="#scribe">Scribe <small>06</small></a>
+</nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-cyber-accent/5 via-transparent to-transparent"></div>
-        
-        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyber-gray/50 border border-cyber-accent/30 mb-8 animate-float">
-                <span class="w-2 h-2 rounded-full bg-cyber-accent animate-pulse"></span>
-                <span class="text-sm text-gray-300 font-mono">Next-Gen Developer Tools</span>
-            </div>
-            
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-                <span class="glitch-text block mb-2" data-text="BUILDING">BUILDING</span>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent via-cyber-purple to-cyber-pink neon-text">THE FUTURE</span>
-                <span class="block mt-2">OF DEVELOPMENT</span>
-            </h1>
-            
-            <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed">
-                Premium web software solutions for the next generation of developers. 
-                AI-powered tools, social platforms, and innovative coding experiences crafted with precision.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#products" class="cyber-btn px-8 py-4 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all">
-                    Explore Products
-                </a>
-                <a href="https://koda-aicodementortemp.netlify.app/" target="_blank" class="cyber-btn px-8 py-4 border border-cyber-accent text-cyber-accent font-semibold rounded-lg hover:bg-cyber-accent/10 transition-all">
-                    Try KODA AI
-                </a>
-            </div>
-        </div>
-        
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <i data-lucide="chevron-down" class="w-6 h-6 text-cyber-accent"></i>
-        </div>
-    </section>
-
-    <!-- Products Overview Section -->
-    <section id="products" class="py-32 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-purple">OUR PRODUCTS</span>
-                </h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">
-                    Innovative tools designed to empower developers of all skill levels
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- KODA Card -->
-                <div onclick="scrollToProduct('koda')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-accent/50">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-accent to-cyber-purple flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="code-2" class="w-8 h-8 text-black"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-accent transition-colors">KODA</h3>
-                    <p class="text-gray-400 mb-4">AI-powered coding mentor for beginners. Get instant help with Python, JavaScript, debugging, and project building.</p>
-                    <div class="flex items-center text-cyber-accent font-mono text-sm">
-                        <span>Explore Product</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-                
-                <!-- DOJO FEED Card -->
-                <div onclick="scrollToProduct('dojo')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-purple/50">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-purple to-cyber-pink flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="users" class="w-8 h-8 text-black"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-purple transition-colors">DOJO FEED</h3>
-                    <p class="text-gray-400 mb-4">Social network for Gen-Alpha developers. Share your builds, get feedback, and connect with young builders worldwide.</p>
-                    <div class="flex items-center text-cyber-purple font-mono text-sm">
-                        <span>Explore Product</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-                
-                <!-- KODA Code Jam Card -->
-                <div onclick="scrollToProduct('codejam')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-pink/50">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-pink to-cyber-purple flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="trophy" class="w-8 h-8 text-black"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-pink transition-colors">KODA CODE JAM</h3>
-                    <p class="text-gray-400 mb-4">Global 7-day coding tournament where developers build and deploy niche-market, single-page websites.</p>
-                    <div class="flex items-center text-cyber-pink font-mono text-sm">
-                        <span>Explore Product</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-                
-                <!-- SCRIBE Card -->
-                <div onclick="scrollToProduct('scribe')" class="cyber-card group cursor-pointer p-8 rounded-2xl bg-gradient-to-br from-cyber-gray/50 to-cyber-dark border border-cyber-gray/50 hover:border-cyber-accent/50">
-                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyber-accent to-cyber-purple flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="file-text" class="w-8 h-8 text-black"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-3 group-hover:text-cyber-accent transition-colors">SCRIBE</h3>
-                    <p class="text-gray-400 mb-4">Lightweight, high-performance markdown formatting tool for clean, beautifully structured documentation.</p>
-                    <div class="flex items-center text-cyber-accent font-mono text-sm">
-                        <span>Explore Product</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- KODA Section -->
-    <section id="koda" class="product-section py-32 relative bg-gradient-to-b from-cyber-dark to-cyber-black">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyber-accent/10 via-transparent to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 mb-6">
-                        <span class="text-xs text-cyber-accent font-mono">AI-POWERED</span>
-                    </div>
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-purple">KODA</span>
-                    </h2>
-                    <h3 class="text-2xl text-gray-400 mb-6">AI Coding Mentor for Beginners</h3>
-                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
-                        KODA is an intelligent coding assistant designed specifically for beginner developers. 
-                        Whether you're learning Python, building your first web app, or stuck on a bug, 
-                        KODA provides step-by-step guidance, clean code examples, and patient explanations.
-                    </p>
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Instant Help</h4>
-                                <p class="text-gray-400 text-sm">Get immediate assistance with Python, JavaScript, and debugging</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Project Building</h4>
-                                <p class="text-gray-400 text-sm">Build real projects with guided step-by-step instructions</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Mobile-First</h4>
-                                <p class="text-gray-400 text-sm">Built entirely on a $150 phone - powerful tools don't need expensive hardware</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="https://koda-aicodementortemp.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all">
-                        <span>Launch KODA</span>
-                        <i data-lucide="external-link" class="w-5 h-5"></i>
-                    </a>
-                </div>
-                <div class="relative">
-                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-accent to-cyber-purple rounded-3xl blur-3xl opacity-20"></div>
-                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50">
-                        <div class="font-mono text-sm mb-4">
-                            <span class="text-cyber-pink">user@koda</span>:<span class="text-cyber-accent">~</span>$ python3 hello.py
-                        </div>
-                        <div class="space-y-2 font-mono text-sm">
-                            <div class="text-gray-400"># KODA AI Assistant Example</div>
-                            <div><span class="text-cyber-purple">def</span> <span class="text-cyber-accent">greet</span>(name):</div>
-                            <div class="pl-4 text-gray-300">return f"Hello, {name}! Ready to code?"</div>
-                            <div class="text-gray-500 mt-4"># AI Response:</div>
-                            <div class="text-cyber-accent">"Great start! Let's add error handling..."</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- DOJO FEED Section -->
-    <section id="dojo" class="product-section py-32 relative">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-cyber-purple/10 via-transparent to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="order-2 lg:order-1 relative">
-                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-purple to-cyber-pink rounded-3xl blur-3xl opacity-20"></div>
-                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50">
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-4 p-4 rounded-xl bg-cyber-dark/50 border border-cyber-gray/50">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-purple to-cyber-pink"></div>
-                                <div class="flex-1">
-                                    <div class="h-3 bg-cyber-gray rounded mb-2 w-32"></div>
-                                    <div class="h-2 bg-cyber-gray rounded w-48"></div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4 p-4 rounded-xl bg-cyber-dark/50 border border-cyber-gray/50 ml-8">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-accent to-cyber-purple"></div>
-                                <div class="flex-1">
-                                    <div class="h-3 bg-cyber-gray rounded mb-2 w-24"></div>
-                                    <div class="h-2 bg-cyber-gray rounded w-40"></div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4 p-4 rounded-xl bg-cyber-dark/50 border border-cyber-gray/50">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-pink to-cyber-purple"></div>
-                                <div class="flex-1">
-                                    <div class="h-3 bg-cyber-gray rounded mb-2 w-36"></div>
-                                    <div class="h-2 bg-cyber-gray rounded w-52"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-1 lg:order-2">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-purple/10 border border-cyber-purple/30 mb-6">
-                        <span class="text-xs text-cyber-purple font-mono">SOCIAL PLATFORM</span>
-                    </div>
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-purple to-cyber-pink">DOJO FEED</span>
-                    </h2>
-                    <h3 class="text-2xl text-gray-400 mb-6">Social Network for Gen-Alpha Developers</h3>
-                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
-                        Dojo Feed is a developer-first social platform built for the next generation of coders. 
-                        Unlike traditional tech communities, Dojo Feed is designed for young builders, 
-                        solo developers, and self-taught programmers who are shipping real projects.
-                    </p>
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-purple/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-purple"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Share Your Builds</h4>
-                                <p class="text-gray-400 text-sm">Showcase your projects and get real feedback from peers</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-purple/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-purple"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">No Gatekeeping</h4>
-                                <p class="text-gray-400 text-sm">Just building - supportive community for all skill levels</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-purple/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-purple"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Find Collaborators</h4>
-                                <p class="text-gray-400 text-sm">Connect with like-minded developers worldwide</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="https://dojofeed.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-purple text-white font-semibold rounded-lg hover:bg-cyber-purple/90 transition-all">
-                        <span>Join DOJO FEED</span>
-                        <i data-lucide="external-link" class="w-5 h-5"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- KODA Code Jam Section -->
-    <section id="codejam" class="product-section py-32 relative bg-gradient-to-b from-cyber-black to-cyber-dark">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyber-pink/10 via-transparent to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-pink/10 border border-cyber-pink/30 mb-6">
-                        <span class="text-xs text-cyber-pink font-mono">COMPETITION</span>
-                    </div>
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-pink to-cyber-purple">KODA CODE JAM</span>
-                    </h2>
-                    <h3 class="text-2xl text-gray-400 mb-6">Global 7-Day Coding Tournament</h3>
-                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
-                        KODA Code Jam is a global 7-day coding tournament where developers build and deploy 
-                        niche-market, single-page websites using the KODA AI mentor. Code, deploy, and 
-                        showcase your project to win permanent platform rewards.
-                    </p>
-                    <div class="grid grid-cols-3 gap-6 mb-8">
-                        <div class="text-center p-4 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
-                            <div class="text-3xl font-bold text-cyber-pink mb-1">7</div>
-                            <div class="text-xs text-gray-400">Days</div>
-                        </div>
-                        <div class="text-center p-4 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
-                            <div class="text-3xl font-bold text-cyber-pink mb-1">24/7</div>
-                            <div class="text-xs text-gray-400">AI Support</div>
-                        </div>
-                        <div class="text-center p-4 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
-                            <div class="text-3xl font-bold text-cyber-pink mb-1">∞</div>
-                            <div class="text-xs text-gray-400">Possibilities</div>
-                        </div>
-                    </div>
-                    <a href="https://kodacodejam.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-pink text-white font-semibold rounded-lg hover:bg-cyber-pink/90 transition-all">
-                        <span>Join Code Jam</span>
-                        <i data-lucide="external-link" class="w-5 h-5"></i>
-                    </a>
-                </div>
-                <div class="relative">
-                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-pink to-cyber-purple rounded-3xl blur-3xl opacity-20"></div>
-                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50">
-                        <div class="flex items-center justify-between mb-6">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="trophy" class="w-6 h-6 text-cyber-pink"></i>
-                                <span class="font-bold">Leaderboard</span>
-                            </div>
-                            <span class="text-xs text-gray-400 font-mono">LIVE</span>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 rounded-lg bg-cyber-dark/50 border border-cyber-pink/30">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-cyber-pink font-bold">1</span>
-                                    <span class="text-sm">DevMaster_99</span>
-                                </div>
-                                <span class="text-cyber-pink font-mono text-sm">2,450 pts</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 rounded-lg bg-cyber-dark/50 border border-cyber-gray/50">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-gray-400 font-bold">2</span>
-                                    <span class="text-sm">CodeNinja</span>
-                                </div>
-                                <span class="text-gray-400 font-mono text-sm">2,380 pts</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 rounded-lg bg-cyber-dark/50 border border-cyber-gray/50">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-gray-400 font-bold">3</span>
-                                    <span class="text-sm">ByteBuilder</span>
-                                </div>
-                                <span class="text-gray-400 font-mono text-sm">2,210 pts</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SCRIBE Section -->
-    <section id="scribe" class="product-section py-32 relative">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-cyber-accent/10 via-transparent to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <div class="relative">
-                    <div class="absolute inset-0 bg-gradient-to-r from-cyber-accent to-cyber-purple rounded-3xl blur-3xl opacity-20"></div>
-                    <div class="relative p-8 rounded-2xl bg-cyber-gray/50 border border-cyber-gray/50 font-mono text-sm">
-                        <div class="flex items-center gap-2 mb-4">
-                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="text-gray-500"># Before SCRIBE</div>
-                            <div class="text-gray-400">messy markdown with   **bad** formatting</div>
-                            <div class="text-gray-400">and unstyled code blocks</div>
-                            <div class="text-cyber-accent mt-4"># After SCRIBE</div>
-                            <div class="text-cyber-purple">## Clean Documentation</div>
-                            <div class="text-gray-300">Beautifully structured</div>
-                            <div class="text-gray-300">with perfect formatting ✨</div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 mb-6">
-                        <span class="text-xs text-cyber-accent font-mono">DEVELOPER TOOL</span>
-                    </div>
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-purple">SCRIBE</span>
-                    </h2>
-                    <h3 class="text-2xl text-gray-400 mb-6">Markdown Formatting Tool</h3>
-                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
-                        Scribe is a lightweight, high-performance markdown formatting tool designed to solve 
-                        a universal developer headache: turning messy syntax and unstyled code blocks into 
-                        clean, beautifully structured documentation instantly.
-                    </p>
-                    <div class="space-y-4 mb-8">
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">High Performance</h4>
-                                <p class="text-gray-400 text-sm">Lightweight and fast - built with vanilla JavaScript</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Mobile-Built</h4>
-                                <p class="text-gray-400 text-sm">Built entirely on an Android phone using Supabase</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <div class="w-6 h-6 rounded-full bg-cyber-accent/20 flex items-center justify-center flex-shrink-0 mt-1">
-                                <i data-lucide="check" class="w-4 h-4 text-cyber-accent"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold mb-1">Hackathon Inspiration</h4>
-                                <p class="text-gray-400 text-sm">Flagship inspiration for the global Scribe Jam hackathon</p>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="https://scribekit.netlify.app/" target="_blank" class="cyber-btn inline-flex items-center gap-2 px-8 py-4 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all">
-                        <span>Try SCRIBE</span>
-                        <i data-lucide="external-link" class="w-5 h-5"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-20 border-t border-cyber-gray/50 relative z-10">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-cyber-orange to-cyber-accent rounded-lg flex items-center justify-center">
-                        <span class="font-bold text-black text-lg">H</span>
-                    </div>
-                    <span class="font-bold text-xl">HYNAWEB</span>
-                </div>
-                
-                <div class="text-gray-400 text-sm text-center md:text-right">
-                    <p>&copy; 2026 HYNAWEB. All rights reserved.</p>
-                    <p class="mt-1 text-cyber-accent/70">Built by Akhouri Systems for HYNAWEB.</p>
-                </div>
-            </div>
-            
-            <div class="mt-12 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-cyber-gray/30 pt-8">
-                <div class="flex gap-6">
-                    <a href="#" class="w-10 h-10 rounded-full bg-cyber-gray/30 flex items-center justify-center hover:bg-cyber-accent/20 hover:text-cyber-accent transition-all">
-                        <i data-lucide="github" class="w-5 h-5"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-cyber-gray/30 flex items-center justify-center hover:bg-cyber-accent/20 hover:text-cyber-accent transition-all">
-                        <i data-lucide="twitter" class="w-5 h-5"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-cyber-gray/30 flex items-center justify-center hover:bg-cyber-accent/20 hover:text-cyber-accent transition-all">
-                        <i data-lucide="linkedin" class="w-5 h-5"></i>
-                    </a>
-                </div>
-                
-                <!-- Hidden Admin Access (Only visible on close inspection, requires password) -->
-                <button onclick="promptAdminAccess()" class="text-gray-700 hover:text-cyber-accent text-xs font-mono transition-colors tracking-widest uppercase">
-                    System Access
-                </button>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Admin Panel (Hidden by default, secured) -->
-    <div id="adminPanel" class="admin-panel">
-        <div class="min-h-screen bg-cyber-black">
-            <div class="border-b border-cyber-gray bg-cyber-dark/80 backdrop-blur-md sticky top-0 z-50">
-                <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="shield" class="w-5 h-5 text-cyber-pink"></i>
-                        <h2 class="text-2xl font-bold text-cyber-pink font-mono">ADMIN CONTROL PANEL</h2>
-                    </div>
-                    <button onclick="toggleAdmin()" class="text-gray-400 hover:text-white transition-colors p-2 hover:bg-cyber-gray rounded-lg">
-                        <i data-lucide="x" class="w-6 h-6"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="max-w-7xl mx-auto px-6 py-12">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- CRUD Form -->
-                    <div class="lg:col-span-1">
-                        <div class="p-6 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
-                            <h3 class="text-xl font-bold mb-6 font-mono" id="formTitle">Add New Product</h3>
-                            <form id="productForm" class="space-y-4">
-                                <input type="hidden" id="productId">
-                                <div>
-                                    <label class="block text-sm text-gray-400 mb-2 font-mono">Product Name</label>
-                                    <input type="text" id="productName" required class="w-full px-4 py-3 rounded-lg bg-cyber-dark border border-cyber-gray focus:border-cyber-accent focus:outline-none transition-colors text-white" placeholder="Enter product name">
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-400 mb-2 font-mono">Description</label>
-                                    <textarea id="productDesc" rows="4" required class="w-full px-4 py-3 rounded-lg bg-cyber-dark border border-cyber-gray focus:border-cyber-accent focus:outline-none transition-colors text-white" placeholder="Enter description"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm text-gray-400 mb-2 font-mono">URL</label>
-                                    <input type="url" id="productUrl" required class="w-full px-4 py-3 rounded-lg bg-cyber-dark border border-cyber-gray focus:border-cyber-accent focus:outline-none transition-colors text-white" placeholder="https://...">
-                                </div>
-                                <div class="flex gap-3 pt-4">
-                                    <button type="submit" class="flex-1 py-3 bg-cyber-accent text-black font-semibold rounded-lg hover:bg-cyber-accent/90 transition-all font-mono">
-                                        SAVE PRODUCT
-                                    </button>
-                                    <button type="button" onclick="resetForm()" class="px-6 py-3 border border-cyber-gray rounded-lg hover:bg-cyber-gray/50 transition-all font-mono text-sm">
-                                        CANCEL
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    
-                    <!-- Products List -->
-                    <div class="lg:col-span-2">
-                        <div class="p-6 rounded-xl bg-cyber-gray/30 border border-cyber-gray/50">
-                            <h3 class="text-xl font-bold mb-6 font-mono">Product Management (CRUD)</h3>
-                            <div id="productsList" class="space-y-4">
-                                <!-- Products will be rendered here via JS -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<main>
+<!-- ================= HERO ================= -->
+<section id="home">
+  <svg class="hero-wm" viewBox="0 0 68 64" aria-hidden="true"><use href="#mark"/></svg>
+  <div class="wrap">
+    <span class="eyebrow" id="eyebrow">Next-Gen Developer Tools</span>
+    <h1 class="hero" id="heroTitle">Building the Future of Development</h1>
+    <p class="hero-sub">Premium web software solutions for the next generation of developers. AI-powered tools, social platforms, and innovative coding experiences crafted with precision.</p>
+    <div class="hero-cta">
+      <a class="btn p" href="#products">Explore Products <span class="ar">→</span></a>
+      <a class="btn s" href="https://koda-aicodementortemp.netlify.app/" target="_blank" rel="noopener">Try KODA AI <span class="ar">↗</span></a>
     </div>
+    <div class="hero-stats">
+      <div class="hs"><b><em>4</em>+</b><span>Live Products</span></div>
+      <div class="hs"><b>24/7</b><span>AI Support</span></div>
+      <div class="hs"><b>100%</b><span>Mobile-Built</span></div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-        
-        // Loading Screen
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('loader');
-                loader.style.opacity = '0';
-                loader.style.transition = 'opacity 0.5s ease-out';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500);
-            }, 1200);
-        });
-        
-        // Initialize Lenis Smooth Scroll (120Hz feel on 60Hz displays)
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-        });
-        
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-        
-        // Custom Cursor
-        const cursor = document.querySelector('.cursor');
-        const cursorFollower = document.querySelector('.cursor-follower');
-        
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            setTimeout(() => {
-                cursorFollower.style.left = e.clientX - 10 + 'px';
-                cursorFollower.style.top = e.clientY - 10 + 'px';
-            }, 100);
-        });
-        
-        document.addEventListener('mousedown', () => { cursor.style.transform = 'scale(0.8)'; });
-        document.addEventListener('mouseup', () => { cursor.style.transform = 'scale(1)'; });
-        
-        // Particle System
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const particles = [];
-        const particleCount = 40;
-        
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 2;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        
-        for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); }
-        
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(particle => { particle.update(); particle.draw(); });
-            particles.forEach((p1, i) => {
-                particles.slice(i + 1).forEach(p2 => {
-                    const dx = p1.x - p2.x;
-                    const dy = p1.y - p2.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 150) {
-                        ctx.strokeStyle = `rgba(0, 240, 255, ${0.1 * (1 - distance / 150)})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                    }
-                });
-            });
-            requestAnimationFrame(animateParticles);
-        }
-        animateParticles();
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-        
-        // Smooth Scroll to Product
-        function scrollToProduct(productId) {
-            const element = document.getElementById(productId);
-            if (element) {
-                lenis.scrollTo(element, { offset: -100 });
-                element.classList.add('active');
-            }
-        }
-        
-        // Intersection Observer for Product Sections
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { entry.target.classList.add('active'); }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
-        
-        document.querySelectorAll('.product-section').forEach(section => { observer.observe(section); });
-        
-        // ==========================================
-        // SECURED ADMIN PANEL FUNCTIONS
-        // ==========================================
-        
-        // 1. Password Prompt (Hides admin from random visitors)
-        function promptAdminAccess() {
-            const password = prompt("Enter Admin Password:");
-            // Default password is 'akhouri'. You can change this.
-            if (password === "akhouri") {
-                document.getElementById('adminPanel').classList.add('active');
-                loadProducts();
-                lucide.createIcons();
-            } else if (password !== null) {
-                alert("Access Denied: Incorrect Password");
-            }
-        }
-        
-        // 2. Toggle Admin Panel Visibility
-        function toggleAdmin() {
-            const panel = document.getElementById('adminPanel');
-            panel.classList.remove('active');
-        }
-        
-        // 3. CRUD Operations with localStorage
-        let products = JSON.parse(localStorage.getItem('hynaweb_products')) || [
-            { id: 1, name: 'KODA', description: 'AI-powered coding mentor for beginners', url: 'https://koda-aicodementortemp.netlify.app/' },
-            { id: 2, name: 'DOJO FEED', description: 'Social network for Gen-Alpha developers', url: 'https://dojofeed.netlify.app/' },
-            { id: 3, name: 'KODA Code Jam', description: 'Global 7-day coding tournament', url: 'https://kodacodejam.netlify.app/' },
-            { id: 4, name: 'SCRIBE', description: 'Lightweight markdown formatting tool', url: 'https://scribekit.netlify.app/' }
-        ];
-        
-        function saveProducts() {
-            localStorage.setItem('hynaweb_products', JSON.stringify(products));
-        }
-        
-        function loadProducts() {
-            const list = document.getElementById('productsList');
-            if (products.length === 0) {
-                list.innerHTML = '<p class="text-gray-500 text-center py-8 font-mono">No products found. Add one to get started.</p>';
-                return;
-            }
-            
-            list.innerHTML = products.map(product => `
-                <div class="p-4 rounded-lg bg-cyber-dark/50 border border-cyber-gray/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="flex-1">
-                        <h4 class="font-semibold mb-1 text-cyber-accent font-mono">${product.name}</h4>
-                        <p class="text-sm text-gray-400 mb-2">${product.description}</p>
-                        <a href="${product.url}" target="_blank" class="text-xs text-gray-500 hover:text-cyber-accent transition-colors font-mono truncate block max-w-md">${product.url}</a>
-                    </div>
-                    <div class="flex gap-2 shrink-0">
-                        <button onclick="editProduct(${product.id})" class="p-2 rounded-lg bg-cyber-gray/50 hover:bg-cyber-accent/20 text-cyber-accent transition-all" title="Edit">
-                            <i data-lucide="edit" class="w-4 h-4"></i>
-                        </button>
-                        <button onclick="deleteProduct(${product.id})" class="p-2 rounded-lg bg-cyber-gray/50 hover:bg-red-500/20 text-red-500 transition-all" title="Delete">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-        
-        document.getElementById('productForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const id = document.getElementById('productId').value;
-            const name = document.getElementById('productName').value;
-            const description = document.getElementById('productDesc').value;
-            const url = document.getElementById('productUrl').value;
-            
-            if (id) {
-                const index = products.findIndex(p => p.id == id);
-                if (index !== -1) { products[index] = { id: parseInt(id), name, description, url }; }
-            } else {
-                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-                products.push({ id: newId, name, description, url });
-            }
-            
-            saveProducts();
-            loadProducts();
-            resetForm();
-        });
-        
-        function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                document.getElementById('productId').value = product.id;
-                document.getElementById('productName').value = product.name;
-                document.getElementById('productDesc').value = product.description;
-                document.getElementById('productUrl').value = product.url;
-                document.getElementById('formTitle').textContent = 'Edit Product';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
-        
-        function deleteProduct(id) {
-            if (confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
-                products = products.filter(p => p.id !== id);
-                saveProducts();
-                loadProducts();
-            }
-        }
-        
-        function resetForm() {
-            document.getElementById('productForm').reset();
-            document.getElementById('productId').value = '';
-            document.getElementById('formTitle').textContent = 'Add New Product';
-        }
-        
-        // Magnetic Effect for Nav
-        document.querySelectorAll('.magnetic').forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            });
-            el.addEventListener('mouseleave', () => { el.style.transform = 'translate(0, 0)'; });
-        });
-        
-        // Glitch Effect on Hover
-        document.querySelectorAll('.glitch-text').forEach(el => {
-            el.addEventListener('mouseenter', () => { el.style.animation = 'glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite'; });
-            el.addEventListener('mouseleave', () => { el.style.animation = ''; });
-        });
-    </script>
+<!-- ================= PRODUCTS ================= -->
+<section id="products">
+  <div class="wrap">
+    <div class="shead rv">
+      <span class="chip">Our Products</span>
+      <h2 class="tt">Innovative tools designed to empower developers of all skill levels</h2>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+</section>
+
+<!-- ================= KODA ================= -->
+<section id="koda">
+  <div class="wrap split">
+    <div class="txt rv l">
+      <span class="chip">AI-Powered</span>
+      <h2 class="tt">KODA</h2>
+      <h3 class="st">AI Coding Mentor for Beginners</h3>
+      <p class="bd">KODA is an intelligent coding assistant designed specifically for beginner developers. Whether you're learning Python, building your first web app, or stuck on a bug, KODA provides step-by-step guidance, clean code examples, and patient explanations.</p>
+      <div class="flist">
+        <div class="fi rv" style="--d:.05s"><span class="ic">⚡</span><div><h4>Instant Help</h4><p>Get immediate assistance with Python, JavaScript, and debugging</p></div></div>
+        <div class="fi rv" style="--d:.12s"><span class="ic">🛠</span><div><h4>Project Building</h4><p>Build real projects with guided step-by-step instructions</p></div></div>
+        <div class="fi rv" style="--d:.19s"><span class="ic">📱</span><div><h4>Mobile-First</h4><p>Built entirely on a $150 phone — powerful tools don't need expensive hardware</p></div></div>
+      </div>
+      <a class="btn p" href="https://koda-aicodementortemp.netlify.app/" target="_blank" rel="noopener">Launch KODA <span class="ar">↗</span></a>
+    </div>
+    <div class="rv r">
+      <div class="term">
+        <div class="tb"><i></i><i></i><i></i><span>user@koda: ~</span></div>
+        <div class="tbd" id="termBody"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOJO FEED ================= -->
+<section id="dojo" style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap split rev">
+    <div class="txt rv r">
+      <span class="chip">Social Platform</span>
+      <h2 class="tt">DOJO FEED</h2>
+      <h3 class="st">Social Network for Gen-Alpha Developers</h3>
+      <p class="bd">Dojo Feed is a developer-first social platform built for the next generation of coders. Unlike traditional tech communities, Dojo Feed is designed for young builders, solo developers, and self-taught programmers who are shipping real projects.</p>
+      <div class="flist">
+        <div class="fi rv" style="--d:.05s"><span class="ic">🚀</span><div><h4>Share Your Builds</h4><p>Showcase your projects and get real feedback from peers</p></div></div>
+        <div class="fi rv" style="--d:.12s"><span class="ic">🤝</span><div><h4>No Gatekeeping</h4><p>Just building — supportive community for all skill levels</p></div></div>
+        <div class="fi rv" style="--d:.19s"><span class="ic">🌐</span><div><h4>Find Collaborators</h4><p>Connect with like-minded developers worldwide</p></div></div>
+      </div>
+      <a class="btn p" href="https://dojofeed.netlify.app/" target="_blank" rel="noopener">Join DOJO FEED <span class="ar">↗</span></a>
+    </div>
+    <div class="rv l">
+      <div class="feed">
+        <div class="post p1">
+          <div class="ph"><span class="av" style="background:var(--or)">D</span><div><b>dev_arya_12</b><span>2 MIN AGO</span></div></div>
+          <p>Shipped my first portfolio site today! Built with SCRIBE docs + KODA help. Feedback welcome 🙌</p>
+          <div class="tags"><i>#firstbuild</i><i>#webdev</i></div>
+          <div class="react"><span><b>48</b> likes</span><span><b>12</b> comments</span></div>
+        </div>
+        <div class="post p2">
+          <div class="ph"><span class="av" style="background:var(--dark)">M</span><div><b>mini_coder_mi</b><span>18 MIN AGO</span></div></div>
+          <p>Looking for a teammate for KODA CODE JAM — I design, you code? DM me!</p>
+          <div class="tags"><i>#codejam</i><i>#teamup</i></div>
+          <div class="react"><span><b>27</b> likes</span><span><b>9</b> comments</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CODE JAM ================= -->
+<section id="codejam">
+  <div class="wrap split">
+    <div class="txt rv l">
+      <span class="chip">Competition</span>
+      <h2 class="tt">KODA CODE JAM</h2>
+      <h3 class="st">Global 7-Day Coding Tournament</h3>
+      <p class="bd">KODA Code Jam is a global 7-day coding tournament where developers build and deploy niche-market, single-page websites using the KODA AI mentor. Code, deploy, and showcase your project to win permanent platform rewards.</p>
+      <div class="stats">
+        <div class="stat rv z" style="--d:.05s"><b>7</b><span>Days</span></div>
+        <div class="stat rv z" style="--d:.13s"><b>24/7</b><span>AI Support</span></div>
+        <div class="stat rv z" style="--d:.21s"><b>∞</b><span>Possibilities</span></div>
+      </div>
+      <a class="btn p" href="https://kodacodejam.netlify.app/" target="_blank" rel="noopener">Join Code Jam <span class="ar">↗</span></a>
+    </div>
+    <div class="rv r">
+      <div class="lb-card" id="lbCard">
+        <div class="lb-h"><span>LEADERBOARD</span><span class="live"><i></i>LIVE</span></div>
+        <div class="lb-row" style="--d:.1s"><span class="rk">1</span><span class="nm">DevMaster_99</span><span class="pt" data-pts="2450">0 pts</span></div>
+        <div class="lb-row" style="--d:.22s"><span class="rk">2</span><span class="nm">CodeNinja</span><span class="pt" data-pts="2380">0 pts</span></div>
+        <div class="lb-row" style="--d:.34s"><span class="rk">3</span><span class="nm">ByteBuilder</span><span class="pt" data-pts="2210">0 pts</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCRIBE ================= -->
+<section id="scribe">
+  <div class="wrap split rev">
+    <div class="txt rv r">
+      <span class="chip">Developer Tool</span>
+      <h2 class="tt">SCRIBE</h2>
+      <h3 class="st">Markdown Formatting Tool</h3>
+      <p class="bd">Scribe is a lightweight, high-performance markdown formatting tool designed to solve a universal developer headache: turning messy syntax and unstyled code blocks into clean, beautifully structured documentation instantly.</p>
+      <div class="flist">
+        <div class="fi rv" style="--d:.05s"><span class="ic">⚙</span><div><h4>High Performance</h4><p>Lightweight and fast — built with vanilla JavaScript</p></div></div>
+        <div class="fi rv" style="--d:.12s"><span class="ic">📱</span><div><h4>Mobile-Built</h4><p>Built entirely on an Android phone using Supabase</p></div></div>
+        <div class="fi rv" style="--d:.19s"><span class="ic">🏆</span><div><h4>Hackathon Inspiration</h4><p>Flagship inspiration for the global Scribe Jam hackathon</p></div></div>
+      </div>
+      <a class="btn p" href="https://scribekit.netlify.app/" target="_blank" rel="noopener">Try SCRIBE <span class="ar">↗</span></a>
+    </div>
+    <div class="rv l">
+      <div class="scribe-mock" id="scribeMock">
+        <div class="spanel before">
+          <div class="sh"><i></i># Before SCRIBE</div>
+<pre>messy markdown with
+   **bad** formatting
+and unstyled code blocks</pre>
+        </div>
+        <button class="srun" id="scribeRun">Run SCRIBE <span class="ar">→</span></button>
+        <div class="spanel after">
+          <div class="sh"><i></i><b># After SCRIBE</b></div>
+<pre><span class="h">## Clean Documentation</span>
+Beautifully structured
+with perfect formatting ✨</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <a class="logo" href="#home">
+        <svg viewBox="0 0 68 64" style="width:36px;height:34px"><use href="#mark"/></svg>
+        <span class="wm"><b>HYNA</b><span>WEB</span></span>
+      </a>
+      <div class="fmeta">
+        <b>© 2026 HYNAWEB. All rights reserved.</b><br>
+        Built by Akhouri Systems for HYNAWEB.
+      </div>
+      <button class="btn ghost sm" id="sysBtn">🔒 System Access</button>
+    </div>
+    <div class="fbot"><span>HYNAWEB // NEXT-GEN DEVELOPER TOOLS</span><span>MADE WITH 🧡 IN INDIA</span></div>
+  </div>
+</footer>
+
+<!-- ================= ADMIN MODAL ================= -->
+<div class="modal" id="adminModal" role="dialog" aria-modal="true">
+  <div class="veil" data-close></div>
+  <div class="box">
+    <button class="x" data-close>✕</button>
+    <h3>Admin Control Panel</h3>
+    <div class="msub">Product Management (CRUD)</div>
+    <div class="fld"><label>Product Name</label><input id="fName" type="text" placeholder="e.g. KODA"></div>
+    <div class="fld"><label>Description</label><textarea id="fDesc" rows="3" placeholder="Short product description…"></textarea></div>
+    <div class="fld"><label>URL</label><input id="fUrl" type="url" placeholder="https://…"></div>
+    <div class="macts">
+      <button class="btn p sm" id="fSave">Save Product</button>
+      <button class="btn s sm" id="fCancel">Cancel</button>
+    </div>
+    <div class="crud-h">Product Management (CRUD)</div>
+    <div id="crudList"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- data + CRUD (localStorage) ---------- */
+const DEF=[
+ {name:'KODA',desc:'AI-powered coding mentor for beginners. Get instant help with Python, JavaScript, debugging, and project building.',url:'https://koda-aicodementortemp.netlify.app/'},
+ {name:'DOJO FEED',desc:'Social network for Gen-Alpha developers. Share your builds, get feedback, and connect with young builders worldwide.',url:'https://dojofeed.netlify.app/'},
+ {name:'KODA CODE JAM',desc:'Global 7-day coding tournament where developers build and deploy niche-market, single-page websites.',url:'https://kodacodejam.netlify.app/'},
+ {name:'SCRIBE',desc:'Lightweight, high-performance markdown formatting tool for clean, beautifully structured documentation.',url:'https://scribekit.netlify.app/'}
+];
+const KEY='hynaweb_products_v1';
+let PRODS=(()=>{try{const s=localStorage.getItem(KEY);if(s){const p=JSON.parse(s);if(Array.isArray(p)&&p.length)return p;}}catch(e){}return DEF.slice();})();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(PRODS));}catch(e){}};
+const grid=document.getElementById('pgrid');
+function renderProducts(){
+  grid.innerHTML=PRODS.map((p,i)=>`
+   <div class="pcard rv" style="--d:${i*0.07}s">
+     <span class="idx">${String(i+1).padStart(2,'0')} / PRODUCT</span>
+     <h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p>
+     <a class="ex" href="${esc(p.url)}" target="_blank" rel="noopener">Explore Product <span class="ar">→</span></a>
+   </div>`).join('');
+  grid.querySelectorAll('.rv').forEach(el=>io.observe(el));
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+/* ---------- admin ---------- */
+const modal=document.getElementById('adminModal');
+let editIdx=-1;
+function renderCrud(){
+  document.getElementById('crudList').innerHTML=PRODS.map((p,i)=>`
+   <div class="crow"><span class="cn">${esc(p.name)}</span><span class="cu">${esc(p.url)}</span>
+   <button class="ed" data-i="${i}">EDIT</button><button class="dl" data-i="${i}">DEL</button></div>`).join('');
+}
+document.getElementById('sysBtn').addEventListener('click',()=>{modal.classList.add('open');renderCrud();});
+modal.querySelectorAll('[data-close]').forEach(x=>x.addEventListener('click',()=>modal.classList.remove('open')));
+document.getElementById('fCancel').addEventListener('click',resetForm);
+function resetForm(){editIdx=-1;fName.value='';fDesc.value='';fUrl.value='';fSave.textContent='Save Product';}
+fSave.addEventListener('click',()=>{
+  const n=fName.value.trim(),d=fDesc.value.trim(),u=fUrl.value.trim();
+  if(!n||!u){alert('Product name and URL are required.');return;}
+  if(editIdx>-1)PRODS[editIdx]={name:n,desc:d,url:u};else PRODS.push({name:n,desc:d,url:u});
+  save();renderProducts();renderCrud();resetForm();
+});
+document.getElementById('crudList').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;
+  if(b.classList.contains('ed')){editIdx=i;fName.value=PRODS[i].name;fDesc.value=PRODS[i].desc;fUrl.value=PRODS[i].url;fSave.textContent='Update Product';}
+  else{if(confirm('Delete '+PRODS[i].name+'?')){PRODS.splice(i,1);save();renderProducts();renderCrud();}}
+});
+/* ---------- preloader ---------- */
+const done=()=>{document.getElementById('loader').classList.add('hide');document.body.classList.add('ready');scramble();};
+window.addEventListener('load',()=>setTimeout(done,500),{passive:true});
+setTimeout(done,2000);
+/* ---------- hero word split ---------- */
+(function(){
+  const h=document.getElementById('heroTitle');
+  const words=h.textContent.split(/\s+/);
+  h.innerHTML=words.map((w,i)=>`<span class="wsp"><span class="w${w.toLowerCase()==='future'?' hl':''}" style="--i:${i}">${w}</span></span>`).join(' ');
+})();
+/* ---------- eyebrow scramble ---------- */
+function scramble(){
+  const el=document.getElementById('eyebrow'),fin=el.textContent,chars='#/>_01HYNAWEB';
+  let f=0;const q=fin.split('').map((c,i)=>({c,s:i*1.4,e:i*1.4+10}));
+  (function run(){let out='',d=0;
+    q.forEach(o=>{if(f>=o.e){out+=o.c;d++;}else if(f>=o.s){out+=o.c===' '?' ':chars[Math.floor(Math.random()*chars.length)];}else out+=' ';});
+    el.textContent=out;if(d<q.length){f++;requestAnimationFrame(run);}else el.textContent=fin;})();
+}
+/* ---------- reveal observer ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.14,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+/* ---------- leaderboard count-up ---------- */
+const lbIo=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting)return;lbIo.unobserve(e.target);e.target.classList.add('in');
+  e.target.querySelectorAll('[data-pts]').forEach(el=>{
+    const t=+el.dataset.pts,st=performance.now();
+    (function tick(n){const p=Math.min((n-st)/1200,1),v=Math.round(t*(1-Math.pow(1-p,3)));
+      el.textContent=v.toLocaleString('en-US')+' pts';if(p<1)requestAnimationFrame(tick);})(st);
+  });
+}),{threshold:.4});
+lbIo.observe(document.getElementById('lbCard'));
+/* ---------- terminal typing ---------- */
+(function(){
+  const L=[['c-cmd','user@koda:~$ python3 hello.py'],['c-com','# KODA AI Assistant Example'],['c-or','def greet(name):'],['c-or','    return f"Hello, {name}! Ready to code?"'],['c-com','# AI Response:'],['c-gr','"Great start! Let\'s add error handling..."']];
+  const box=document.getElementById('termBody');let li=0,ci=0,cur=null;
+  const tIo=new IntersectionObserver(es=>{if(es[0].isIntersecting){tIo.disconnect();type();}},{threshold:.3});
+  tIo.observe(box);
+  function type(){
+    if(li>=L.length){box.insertAdjacentHTML('beforeend','<span class="cur"></span>');return;}
+    if(!cur){cur=document.createElement('div');cur.className=L[li][0];box.appendChild(cur);}
+    const txt=L[li][1];
+    if(ci<=txt.length){cur.textContent=txt.slice(0,ci);ci++;setTimeout(type,16);}
+    else{li++;ci=0;cur=null;setTimeout(type,180);}
+  }
+})();
+/* ---------- scribe run ---------- */
+document.getElementById('scribeRun').addEventListener('click',()=>{
+  const m=document.getElementById('scribeMock');m.classList.remove('run');void m.offsetWidth;m.classList.add('run');
+});
+/* ---------- header + progress (rAF-throttled, passive) ---------- */
+let tick=false;
+addEventListener('scroll',()=>{if(tick)return;tick=true;
+  requestAnimationFrame(()=>{const h=document.documentElement;
+    document.getElementById('prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    document.getElementById('hdr').classList.toggle('sc',h.scrollTop>10);tick=false;});
+},{passive:true});
+/* ---------- nav spy ---------- */
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)
+  document.querySelectorAll('nav.desk a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));}),
+  {rootMargin:'-45% 0px -50% 0px'});
+['home','products','koda','dojo'].forEach(id=>{const s=document.getElementById(id);if(s)spy.observe(s);});
+/* ---------- mobile menu ---------- */
+const bm=document.getElementById('burger');
+bm.addEventListener('click',()=>document.body.classList.toggle('mopen'));
+document.getElementById('mveil').addEventListener('click',()=>document.body.classList.remove('mopen'));
+document.querySelectorAll('.mnav a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('mopen')));
+/* ---------- init ---------- */
+renderProducts();
+</script>
 </body>
 </html>
